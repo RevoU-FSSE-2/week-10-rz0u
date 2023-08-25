@@ -12,7 +12,7 @@ export const transactionRouter = Router();
 transactionRouter.get("/", getAllTransactions);
 transactionRouter.post("/", authenticationMiddleware, createTransaction);
 transactionRouter.post(
-  "/approve",
+  "/approval",
   authorizationMiddleware,
   approveTransactions
 );

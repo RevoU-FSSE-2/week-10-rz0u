@@ -41,14 +41,7 @@ export const createTransaction = async (req, res) => {
 
 // Approve Transactions
 export const approveTransactions = async (req, res) => {
-  const { role } = req.user;
-  if (role !== "approver") {
-    return res.status(403).json({
-      message: "User is not a an approver",
-    });
-  }
-
-  const { transferId, status } = req.body;
+  const { transactionId, status } = req.body;
 
   if (status !== "approved" && status !== "rejected") {
     return res.status(400).json({
@@ -58,20 +51,24 @@ export const approveTransactions = async (req, res) => {
 
   try {
     const result = await req.db
-      .collection("transfer")
-      .updateOne({ _id: new ObjectId(transferId) }, { $set: { status } });
+      .collection("transactions")
+      .findOneAndUpdate(
+        { _id: new ObjectId(transactionId) },
+        { $set: { status } }
+      );
+    console.log(result);
     if (result.modifiedCount === 0) {
       return res.status(404).json({
-        message: "Transfer does not exist",
+        message: "Transaction does not exist",
       });
     }
     if (status === "approved") {
       res.status(200).json({
-        message: "Transfer request approved",
+        message: "Transaction request approved",
       });
     } else {
       res.status(200).json({
-        message: "Transfer request rejected",
+        message: "Transaction request rejected",
       });
     }
   } catch (error) {

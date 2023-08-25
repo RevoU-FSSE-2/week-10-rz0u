@@ -24,7 +24,7 @@ export const register = async (req, res, next) => {
   try {
     const newUser = await registerService(req, username, role, password);
 
-    res.status(200).json({
+    res.status(201).json({
       message: "User successfully registered",
       data: newUser,
     });
